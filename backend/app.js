@@ -1,12 +1,14 @@
 const express = require("express");
-const app = express();
-//importo la ruta de usuarios
 const apiUsersRoutes = require("./api/routes/users")
+const { connectionToDB } = require("./api/dbconfig");
 
-//ES UN MIDDLEWARE QUE SIRVE PARA PARSEAR LO QUE VIENE EN EL BODY
+const app = express();
+connectionToDB();
 app.use(express.json())
-
 app.use("/api/users", apiUsersRoutes);
-app.listen(4000, ()=> {
-    console.log("servidor funcionando")
+
+const port = process.env.port
+app.listen(port, () => 
+{
+    console.log(`server listening on port: ${port}`)
 });

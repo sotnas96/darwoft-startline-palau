@@ -1,22 +1,81 @@
 const {validationResult} = require('express-validator');
-const userController = {
-    list: (req,res) => {
-        res.send("this are all the users")
+const { User, Profile } = require("../dbconfig");
+const bcrypt = require("bcryptjs");
+const { generateToken } = require('../utils/jwt');
+
+
+
+const userController =
+{
+    logIn: async (req, res) => 
+    {
+        try
+        {
+            let userEmail = req.body.email;
+            const user = await User.findOne({email: userEmail})
+            if (!user)
+            {
+                throw new Error('email or password is not correct')
+            }
+            //create token if find
+            const payload = 
+            {
+                userId: user._id,
+                email: user.email,
+                fullName: user.fullname,
+            }
+            const token = generateToken(payload)
+            res.status(200).json({succes:true, token});
+        }
+        catch(error)
+        {
+            res.send(error.message);
+        }
+        //check if user exist
+        //if exist creare 
     },
-    userDetail: (req,res) => {
+    createUser: async (req, res) =>
+    {
+        try
+        {
+            let errors = validationResult(req);
+            if (!errors.isEmpty())
+            {
+                return res.status(400).json({success:false, errors: errors.array()}); 
+            }
+            const newUser = 
+            {
+                ...req.body,
+                password: bcrypt.hashSync(req.body.password, 10),
+            };
+            delete newUser.repassword;
+            const user =  await new User(newUser).save()
+            const newProfile = {user: user._id};
+            const profile = await new Profile(newProfile).save();
+            res.status(200).json({ success: true, user, profile});
+        }
+        catch(error)
+        {
+            res.status(200).json(error.message)
+        }
+    },
+    userProfile: (req, res) =>
+    {
+        //create query to search user in db and bring data
         res.send(`this is user id: ${req.params.id}`)
     },
-    signUp:(req,res) => {
-        //extraer info del body
-        // const {name, lastName, email, password} = req.body;
-        //validar 
-        let errors = validationResult(req);
-        if (!errors.isEmpty()){
-            return res.status(400).json({errors: errors.array()}); 
+    updateProfile: async (req, res) =>
+    {
+        try
+        {
+
         }
-        res.status(200).json({message: "user registered successfully"})
-        //if ok, guardo en db else error msg
-        //devuevo mensaje de exito
+        catch(error)
+        {
+            
+        }
+        //validar lo datos de profile
+
     }
 };
 module.exports = userController;
