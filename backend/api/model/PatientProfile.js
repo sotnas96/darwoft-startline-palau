@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const profileSchema = new Schema(
+const PatientProfileSchema = new Schema(
     {
         user:
         {
@@ -22,8 +22,8 @@ const profileSchema = new Schema(
         avatar: String
     }
 );
-profileSchema.virtual('dateFormat').get(function() {
+PatientProfileSchema.virtual('dateFormat').get(function() {
     let dateFormat = `${this.day}/${this.month}/${this.year}`;
     return dateFormat;
 });
-module.exports = profileSchema
+module.exports = PatientProfileSchema

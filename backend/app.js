@@ -1,12 +1,12 @@
 const express = require("express");
-const apiUsersRoutes = require("./api/routes/users")
+const apiMainRoutes = require("./api/routes/main")
 const { connectionToDB } = require("./api/dbconfig");
-
-const app = express();
-app.use(express.json())
-app.use("/api/users", apiUsersRoutes);
-
 const port = process.env.port
+const app = express();
+
+app.use(express.json())
+app.use("/api", apiMainRoutes); 
+
 try
 {
     connectionToDB();
