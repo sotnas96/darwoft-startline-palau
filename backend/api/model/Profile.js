@@ -10,15 +10,16 @@ const profileSchema = new Schema(
             required: true
         },
         dni: Number,
-        Sex: String,
-        social: String,
+        sex: String,
+        healthCare: String,
         career: String,
         dateBirth:
         {
             year: Number,
             month: Number,
             day: Number
-        }
+        },
+        avatar: String
     }
 );
 profileSchema.virtual('dateFormat').get(function() {
