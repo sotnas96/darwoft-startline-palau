@@ -1,13 +1,13 @@
-const { Router }= require ("express");
+const express = require ("express");
 const doctorController = require("../controller/doctor");
+const profileValidation = require("../validations/doctor/profileValidation");
 const isDoctor = require('../middlewares/doctorAuth');
-// const profileValidation = require("../validations/patient/profileValidation");
+const doctorRouter = express.Router();
+const uploadFile = require("../utils/multer");
 
-const router = Router();
-
-router.route('profile') 
+doctorRouter.route('/profile') 
     .get(isDoctor, doctorController.getProfile)
-    .put(isDoctor, doctorController.updateProfile) 
+    .put(isDoctor,  uploadFile.single('avatar'),profileValidation, doctorController.updateProfile) 
     .delete(isDoctor, doctorController.deleteProfile); 
 
-module.exports = router;
+module.exports = doctorRouter;
