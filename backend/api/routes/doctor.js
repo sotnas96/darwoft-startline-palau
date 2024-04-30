@@ -1,13 +1,20 @@
 const express = require ("express");
+const doctorRouter = express.Router();
+
 const doctorController = require("../controller/doctor");
 const profileValidation = require("../validations/doctor/profileValidation");
-const isDoctor = require('../middlewares/doctorAuth');
-const doctorRouter = express.Router();
 const uploadFile = require("../utils/multer");
 
+const isAuthorized = require("../middlewares/authorization");
+const scheduleValidation = require("../validations/doctor/schedule");
+// const isDoctor = require('../middlewares/doctorAuth');
+
 doctorRouter.route('/profile') 
-    .get(isDoctor, doctorController.getProfile)
-    .put(isDoctor,  uploadFile.single('avatar'),profileValidation, doctorController.updateProfile) 
-    .delete(isDoctor, doctorController.deleteProfile); 
+    .get(isAuthorized, doctorController.getProfile)
+    .put(isAuthorized,  uploadFile.single('avatar'),profileValidation, doctorController.updateProfile) 
+    .delete(isAuthorized, doctorController.deleteProfile); 
+
+doctorRouter.get('/appointments', isAuthorized, doctorController.getAppointments);
+doctorRouter.post('/schedule', isAuthorized, scheduleValidation, doctorController.uploadSchedule)   
 
 module.exports = doctorRouter;
