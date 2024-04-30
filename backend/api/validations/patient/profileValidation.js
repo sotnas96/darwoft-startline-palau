@@ -2,34 +2,36 @@ const { body } = require("express-validator");
 const profileValidation =
 [
     body('dni')
-        .optional()
         .trim()
+        .notEmpty()
         .isLength({min:5})
         .isNumeric().withMessage('Must be a number'),
     body('sex')
-        .optional()
         .trim()
+        .notEmpty()
         .isString()
         .toUpperCase(),
     body('healthCare')
-        .optional()
         .trim()
+        .notEmpty()
         .isString()
         .toUpperCase(),
     body('career')
-        .optional() 
         .trim()
+        .notEmpty()
         .isString(),
     body('dateBirth.day')
-        .optional()
+        .trim()
+        .notEmpty()
         .isNumeric().withMessage('Day of birth must be a number'),
     body('dateBirth.month')
-        .optional()
+        .trim()
+        .notEmpty()
         .isNumeric().withMessage('Month of birth must be a number'),
     body('dateBirth.year')
-        .optional()
+        .trim()
+        .notEmpty()
         .isNumeric().withMessage('Year of birth must be a number'),
-    body('avatar')
-        .optional()
+
 ];
 module.exports = profileValidation;

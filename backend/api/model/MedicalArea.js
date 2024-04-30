@@ -1,10 +1,8 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const medicalAreaSchema = new Schema(
-    {
-        area:
-        {
+const medicalAreaSchema = new Schema({
+        area: {
             type: String,
             require: true,
         }

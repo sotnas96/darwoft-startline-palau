@@ -5,12 +5,9 @@ const { generateToken } = require('../utils/jwt');
 const salt = parseInt(process.env.SALT)
 
 
-const userController =
-{
-    logIn: async (req, res) => 
-    {
-        try
-        {
+const userController = {
+    logIn: async (req, res) => {
+        try {
             let errors = validationResult(req);
             if (!errors.isEmpty()) {
                 return res.status(400).json({
@@ -21,9 +18,7 @@ const userController =
             }
             const userEmail = req.body.email;
             const user = await User.findOne({email: userEmail});
-            // if (!user) throw new Error('credentials are incorrect');
-            const payload = 
-            {
+            const payload = {
                 userId: user._id,
                 email: user.email,
                 fullName: user.fullname,
@@ -36,21 +31,15 @@ const userController =
                 token,
                 payload
             });
-        }
-        catch(error)
-        {
+        } catch(error){
             res.status(400).json({
                 success: false,
                 error:error.message
             });
         }
-        //check if user exist
-        //if exist creare 
     },
-    createUser: async (req, res) =>
-    {
-        try
-        {
+    createUser: async (req, res) => {
+        try {
             let errors = validationResult(req);
             if (!errors.isEmpty()) {
                 return res.status(400).json({
@@ -59,8 +48,7 @@ const userController =
                     message: 'Validation result error'
                 });
             };
-            const newUser = 
-            {
+            const newUser = {
                 ...req.body,
                 password: bcrypt.hashSync(req.body.password, salt)
             };
@@ -69,27 +57,18 @@ const userController =
             
             const user =  await new User(newUser).save();
             const newProfile = {user: user._id};
-            let profile = undefined;
-            if (user.role === 'PATIENT')
-            {
-                profile = await new PatientProfile(newProfile).save();
-            }
-            else
-            {
-                profile = await new DoctorProfile(newProfile).save()
-            }
-
-            res.status(200).json({
-                success: true,
-                user,
-                profile
-            });
+            let modelo = ( user.role === 'PATIENT') ?  PatientProfile : DoctorProfile;
+            let profile = await new modelo(newProfile).save();
+            return res.status(200).json({
+                    success: true,
+                    user,
+                    profile
+                });
         }
-        catch(error)
-        {
+        catch(error) {
             return  res.status(400).json({
                     success: false, 
-                    error,
+                    error: error.message,
                     messagge:'error from controller'
             });
         }

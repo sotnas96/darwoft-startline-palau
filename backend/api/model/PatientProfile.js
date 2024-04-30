@@ -1,10 +1,8 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const PatientProfileSchema = new Schema(
-    {
-        user:
-        {
+const PatientProfileSchema = new Schema({
+        user: {
             type: Schema.Types.ObjectId,
             ref:'User',
             required: true
@@ -13,8 +11,7 @@ const PatientProfileSchema = new Schema(
         sex: String,
         healthCare: String,
         career: String,
-        dateBirth:
-        {
+        dateBirth: {
             year: Number,
             month: Number,
             day: Number
