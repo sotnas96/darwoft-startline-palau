@@ -12,7 +12,12 @@ const appointmentSchema = new Schema({
         ref: 'User',
         require: true
     },
-    dueDate: Date,
+    date: {
+        type: Date,
+        set: (value) => {
+           return new Date(value).setUTCHours(0, 0, 0, 0);
+        }
+    },
     time: String
 });
 module.exports = appointmentSchema;

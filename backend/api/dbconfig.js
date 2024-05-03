@@ -1,5 +1,5 @@
-const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 dotenv.config();
  
 const userSchema  = require("./model/User");
@@ -42,5 +42,4 @@ module.exports =
     Appointment,
     Schedule,
     connectionToDB,
-
 };

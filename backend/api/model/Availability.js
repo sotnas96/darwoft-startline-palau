@@ -14,10 +14,9 @@ const timeSlotSchema = new Schema({
 });
 const availalabilitySlotSchema = new Schema({
     date: {
-        type:Date,
-        require: true,
+        type: Date,
         set: (value) => {
-            return new Date(value).setHours(0, 0, 0, 0)
+           return new Date(value).setUTCHours(0, 0, 0, 0);
         }
     },
     time_slot: [timeSlotSchema]

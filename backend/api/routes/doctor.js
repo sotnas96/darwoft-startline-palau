@@ -15,6 +15,8 @@ doctorRouter.route('/profile')
     .delete(isAuthorized, doctorController.deleteProfile); 
 
 doctorRouter.get('/appointments', isAuthorized, doctorController.getAppointments);
-doctorRouter.post('/schedule', isAuthorized, scheduleValidation, doctorController.uploadSchedule)   
+doctorRouter.delete('/appointments', isAuthorized, doctorController.cancelAppointmet);  
+
+doctorRouter.post('/schedule', isAuthorized, scheduleValidation, doctorController.uploadSchedule) 
 
 module.exports = doctorRouter;

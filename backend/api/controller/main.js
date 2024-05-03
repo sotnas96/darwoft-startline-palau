@@ -64,8 +64,7 @@ const userController = {
                     user,
                     profile
                 });
-        }
-        catch(error) {
+        } catch(error) {
             return  res.status(400).json({
                     success: false, 
                     error: error.message,
