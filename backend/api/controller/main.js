@@ -23,6 +23,7 @@ const userController = {
                 email: user.email,
                 fullName: user.fullname,
                 role: user.role,
+                profile: user.profile,
                 version: 0,
             };
             const token = generateToken(payload);
@@ -54,11 +55,12 @@ const userController = {
             };
             delete newUser.repassword;
             delete newUser.medicalKey;
+
+            const modelo = ( newUser.role == 'PATIENT') ?  PatientProfile : DoctorProfile;
+            const profile = await new modelo().save();
+            newUser.profile = profile._id;
             
             const user =  await new User(newUser).save();
-            const newProfile = {user: user._id};
-            let modelo = ( user.role === 'PATIENT') ?  PatientProfile : DoctorProfile;
-            let profile = await new modelo(newProfile).save();
             return res.status(200).json({
                     success: true,
                     user,

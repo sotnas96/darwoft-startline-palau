@@ -1,5 +1,5 @@
 const { body } = require("express-validator");
-const getMedicAreas = require("../../utils/getMedicAreas");
+const getMedicAreas = require("../../controller/doctor");
 const isMedicArea = async (value) => {
     const medicAreas = await getMedicAreas();
     return medicAreas.some(obj => obj['area'] == value );
@@ -14,12 +14,10 @@ const profileValidation = [
         .trim()
         .isString()
         .toUpperCase(),
-    body('dateBirth.day')
-        .isNumeric().withMessage('Day of birth must be a number'),
-    body('dateBirth.month')
-        .isNumeric().withMessage('Month of birth must be a number'),
-    body('dateBirth.year')
-        .isNumeric().withMessage('Year of birth must be a number'),
+    body('dateBirth')
+        .trim()
+        .notEmpty()
+        .isISO8601().withMessage('Please use format YYYY-MM'),
     body('medicalLicense')
         .trim()
         .isLength({min:4})

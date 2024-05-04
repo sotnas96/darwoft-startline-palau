@@ -20,15 +20,16 @@ const patientController = {
             if (!errors.isEmpty()) {
                 return res.status(400).json({success:false, errors: errors.array()});
             }
-            let userId = {user: req.customData.userId};
-            let patientProfile = {...req.body};
+            let patientProfile = {
+                ...req.body,
+                avatar: req.file.path
+            };
             const profileUpdate = await PatientProfile.findOneAndUpdate(
-                userId,
+                { _id: req.customData.profile },
                 patientProfile,
-                {
-                    returnOriginal: false
-                }
+                { returnOriginal: false }
             );
+            if (!profileUpdate) throw new Error('update failed')
             res.status(200).json({success:true, message:'patient updated', profileUpdate});
 
         } catch(error) {
@@ -52,16 +53,16 @@ const patientController = {
     },
     getAppointments: async (req, res) => {
         try {
-            const appointments = await Appointment.find({patient: req.customData.userId}); 
+            const appointments = await Appointment.find({patient: req.customData.userId}).populate('doctor'); 
             res.status(200).json({success: true, appointments});
-
+    
         } catch (error) {
             res.status(400).json({success: false, error: error.message});
         }
     },
     allSchedules: async (req, res) => {
         try {
-            const schedule = await Schedule.find({'schedule.time_slot': { $elemMatch: { available: true }}})
+            const schedule = await Schedule.find({'schedule.time_slot': { $elemMatch: { available: true }}}).populate({path: 'doctor', select:'name lastName'})
             res.status(200).json({success: true, schedule});
         } catch (error) {
             res.status(400).json({success: false, error: error.message});
@@ -106,7 +107,7 @@ const patientController = {
             res.status(200).json({success: true, newAppointment, data: updateDoctorSchedule});
 
         } catch (error) {
-            res.status(400).json({success: false, error: error.message});
+            res.status(400).json({error: error.message});
         }
     },
     deleteAppointment: async (req, res) => {

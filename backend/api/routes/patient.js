@@ -9,7 +9,7 @@ const uploadFile = require("../utils/multer");
 const patientRouter = express.Router();
 patientRouter.route("/profile")
     .get(isAuthorized, patientController.getProfile)
-    .put(isAuthorized, uploadFile.single('avatar'),  profileValidation , patientController.updateProfile)
+    .put(isAuthorized, uploadFile.single('avatar'), profileValidation , patientController.updateProfile)
     .delete(isAuthorized, patientController.deleteProfile); 
 
 patientRouter.route("/appointments")

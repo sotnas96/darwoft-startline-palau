@@ -4,21 +4,16 @@ const { Schema } = mongoose;
 const doctorProfileSchema = new Schema({
         user: {
             type: Schema.Types.ObjectId,
-            ref:'User',
-            required: true
+            ref:'user',
         },
         area: {
             type: Schema.Types.ObjectId,
-            ref:'MedicalArea',
+            ref:'medical_area',
         },
         medicalLicense: Number,
         dni: Number,
         sex: String,
-        dateBirth: {
-            year: Number,
-            month: Number,
-            day: Number
-        },
+        dateBirth: String,
         avatar: String
     }
 );

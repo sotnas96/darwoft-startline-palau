@@ -20,18 +20,10 @@ const profileValidation =
         .trim()
         .notEmpty()
         .isString(),
-    body('dateBirth.day')
+    body('dateBirth')
         .trim()
         .notEmpty()
-        .isNumeric().withMessage('Day of birth must be a number'),
-    body('dateBirth.month')
-        .trim()
-        .notEmpty()
-        .isNumeric().withMessage('Month of birth must be a number'),
-    body('dateBirth.year')
-        .trim()
-        .notEmpty()
-        .isNumeric().withMessage('Year of birth must be a number'),
+        .isISO8601().withMessage('Please use format YYYY-MM')
 
 ];
 module.exports = profileValidation;

@@ -8,7 +8,7 @@ const timeSlotSchema = new Schema({
     },
     appointment: {
         type: Schema.Types.ObjectId,
-        ref: 'Appointment',
+        ref: 'appointment',
         default: null
     }
 });
@@ -24,7 +24,7 @@ const availalabilitySlotSchema = new Schema({
 const availabilitySchema = new Schema({
     doctor: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'user',
         required: true,
     },
     schedule: [availalabilitySlotSchema]

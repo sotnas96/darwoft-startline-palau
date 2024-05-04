@@ -9,11 +9,16 @@ const userSchema = new Schema({
             unique: true
         },
         role: String,
-        password: String
+        password: String,
+        profile: {
+            type: Schema.Types.ObjectId,
+            refPath: 'roleRef'
+        }
     }
 );
-//virtual are not stored on the data base. they are documents properties to get and set but do not persit in db
-// getters are usefull for formatting or combaning fields while setter are useful for de-composing a single value
+userSchema.virtual('roleRef').get(function (){
+    return this.role == 'PATIENT' ? 'patientProfile' : 'doctorProfile'
+})
 userSchema.virtual('fullname').get(function() {
     return `${this.name} ${this.lastName}`;
 

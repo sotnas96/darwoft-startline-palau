@@ -2,9 +2,16 @@ const { validationResult } = require('express-validator');
 const { User, DoctorProfile, Schedule, Appointment } = require("../dbconfig");
 const  mongoose  = require('mongoose');
 
-const getMedicAreas = require("../utils/getMedicAreas"); 
 const getDates = require("../utils/doctorSchedule");
 
+exports.getMedicAreas = async () => {
+    try {
+        return await MedicalArea.find({});
+    } catch(error) {
+        res.status(400).json({error: error.message});
+    }
+
+};
 const getAreaId = async (value) => {
     const areas = await getMedicAreas();
     const medicArea = areas.find((obj) => obj['area'] === value);
@@ -31,21 +38,22 @@ const doctorController = {
             if (!errors.isEmpty()) {
                 return res.status(400).json({success:false, errors: errors.array()});
             }
-            let userId = {user: req.customData.userId};
             const areaId = await getAreaId(req.body.area);
+
             let doctorProfile = {
                 ...req.body,
-                area: areaId
+                area: areaId,
+                avatar: req.file.path
             };
             const profileUpdate = await DoctorProfile.findOneAndUpdate(
-                userId,
+                { _id: req.customData.profile },
                 doctorProfile,
                 { returnOriginal: false }
             );
-            res.status(200).json({
-                success: true, 
-                message: 'doctor updated', 
-                profileUpdate
+            return res.status(200).json({
+                        success: true, 
+                        message: 'doctor updated', 
+                        profileUpdate
             });
         } catch(error) {
             res.status(400).json({

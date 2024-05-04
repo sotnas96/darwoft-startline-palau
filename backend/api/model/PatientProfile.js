@@ -4,18 +4,13 @@ const { Schema } = mongoose;
 const PatientProfileSchema = new Schema({
         user: {
             type: Schema.Types.ObjectId,
-            ref:'User',
-            required: true
+            ref:'user',
         },
         dni: Number,
         sex: String,
         healthCare: String,
         career: String,
-        dateBirth: {
-            year: Number,
-            month: Number,
-            day: Number
-        },
+        dateBirth: String,
         avatar: String
     }
 );
