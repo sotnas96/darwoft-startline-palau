@@ -1,5 +1,6 @@
 const {validationResult} = require('express-validator');
 const { User, PatientProfile, DoctorProfile } = require("../dbconfig");
+const CustomError = require('../utils/CustomError');
 const bcrypt = require("bcryptjs");
 const { generateToken } = require('../utils/jwt');
 const salt = parseInt(process.env.SALT)
@@ -7,15 +8,15 @@ const salt = parseInt(process.env.SALT)
 
 const userController = {
     logIn: async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            let error = new CustomError('login validation failed', 400, errors.array())
+            return res.status(error.statusCode).json({
+                success: false,
+                errors: error.getErrors()
+            });
+        }
         try {
-            let errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                return res.status(400).json({
-                    success: false,
-                    errors: errors.array(),
-                    message: 'Validation result error'
-                });
-            }
             const userEmail = req.body.email;
             const user = await User.findOne({email: userEmail});
             const payload = {
@@ -33,22 +34,22 @@ const userController = {
                 payload
             });
         } catch(error){
-            res.status(400).json({
+            res.status(error.statusCode).json({
                 success: false,
                 error:error.message
             });
         }
     },
     createUser: async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const error = new CustomError('SingUp failed', 400, errors.array())
+            return res.status(error.statusCode).json({
+                success: false,
+                errors: error.getErrors(),
+            });
+        };
         try {
-            let errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                return res.status(400).json({
-                    success: false,
-                    errors: errors.array(),
-                    message: 'Validation result error'
-                });
-            };
             const newUser = {
                 ...req.body,
                 password: bcrypt.hashSync(req.body.password, salt)
@@ -67,12 +68,12 @@ const userController = {
                     profile
                 });
         } catch(error) {
-            return  res.status(400).json({
+            return  res.status(error.statusCode).json({
                     success: false, 
                     error: error.message,
                     messagge:'error from controller'
             });
         }
-    }
+    } 
 };
 module.exports = userController
