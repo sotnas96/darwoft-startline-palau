@@ -34,4 +34,4 @@ Darwoft Health is a web application built using the MERN stack (MongoDB, Express
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/sotnas96/darwoft-startline-palau
+   git clone https://github.com/sotnas96/darwoft-startline-palau.git
